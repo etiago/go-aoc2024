@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func part1(lines []string) {
+func day1Part1(lines []string) int {
 	// Need two lists: left and right, length is known to be
 	// size of input
 	left := make([]int, len(lines))
@@ -36,9 +36,10 @@ func part1(lines []string) {
 	}
 
 	log.Println("Difference:", difference)
+	return difference
 }
 
-func part2(lines []string) {
+func day1Part2(lines []string) int {
 	// Part 2
 
 	left := make([]int, len(lines))
@@ -61,14 +62,16 @@ func part2(lines []string) {
 	}
 
 	log.Println("Score:", score)
+	return score
 }
 
-func Day1(input_file_path *string) {
+func Day1(input_file_path *string) (int, int) {
 	// Day 1 code here
 	log.Println("Day 1")
 
 	input := ReadFileLines(input_file_path)
 
-	part1(input)
-	part2(input)
+	difference := day1Part1(input)
+	score := day1Part2(input)
+	return difference, score
 }

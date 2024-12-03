@@ -33,8 +33,8 @@ func parseMulInstructions(input string) []Instruction {
 func day3Part1(input_file_path *string) {
 	// Part 1
 	input := ReadFile(input_file_path)
-	// instructions := parseMulInstructions(input)
-	instructions := parseMulWithDoAndDont(input, false)
+	instructions := parseMulInstructions(input)
+	// instructions := parseMulWithDoAndDont(input, false)
 
 	total := 0
 
@@ -126,13 +126,12 @@ func day3Part2(input_file_path *string) {
 		total += instruction.left * instruction.right
 	}
 
-	log.Println(instructions)
 	log.Println("Total:", total)
 }
 
 func Day3(input_file_path *string) {
 	// Part 1
-	day3Part1(input_file_path)
+	// day3Part1(input_file_path)
 	// Part 2
 	day3Part2(input_file_path)
 }

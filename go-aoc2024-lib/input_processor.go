@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func ReadFile(input_file_path string) string {
-	content, err := os.ReadFile(input_file_path)
+func ReadFile(input_file_path *string) string {
+	content, err := os.ReadFile(*input_file_path)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -15,7 +15,7 @@ func ReadFile(input_file_path string) string {
 	return string(content)
 }
 
-func ReadFileLines(input_file_path string) []string {
+func ReadFileLines(input_file_path *string) []string {
 	content := ReadFile(input_file_path)
 	return strings.Split(content, "\n")
 }

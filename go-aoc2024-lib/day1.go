@@ -67,7 +67,7 @@ func Day1(input_file_path *string) {
 	// Day 1 code here
 	log.Println("Day 1")
 
-	input := ReadFileLines(*input_file_path)
+	input := ReadFileLines(input_file_path)
 
 	part1(input)
 	part2(input)

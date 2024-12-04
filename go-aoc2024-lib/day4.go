@@ -60,7 +60,7 @@ func findXmas(x, y int, matrix [][]rune, currentWord string, possibleDeltas [][]
 		return total
 	}
 }
-func day4Part1(input [][]rune) {
+func day4Part1(input [][]rune) int {
 	// Part 1
 	total := 0
 	for y, line := range input {
@@ -70,6 +70,7 @@ func day4Part1(input [][]rune) {
 		}
 	}
 	log.Println("Total Part 1:", total)
+	return total
 }
 
 var masPossibilties = map[[4]rune]struct{}{
@@ -79,7 +80,7 @@ var masPossibilties = map[[4]rune]struct{}{
 	{'M', 'M', 'S', 'S'}: {},
 }
 
-func day4Part2(input [][]rune) {
+func day4Part2(input [][]rune) int {
 	total := 0
 	// Skip iterating over all the edges since the center
 	// of a MAS is always at least 1 unit away from the edges.
@@ -96,11 +97,15 @@ func day4Part2(input [][]rune) {
 		}
 	}
 	log.Println("Total Part 2:", total)
+	return total
 }
-func Day4(input_file_path *string) {
+
+func Day4(input_file_path *string) (int, int) {
 	lines := ReadFileLines(input_file_path)
 	charMatrix := stringLinesToCharMatrix(lines)
 
-	day4Part1(charMatrix)
-	day4Part2(charMatrix)
+	day1 := day4Part1(charMatrix)
+	day2 := day4Part2(charMatrix)
+
+	return day1, day2
 }

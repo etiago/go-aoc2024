@@ -79,6 +79,10 @@ func day5Part2(inputFilePath *string) int {
 		invalidIndex, ok := isValidUpdateWithInvalidIndex(badUpdate, rules)
 
 		// Brute force... feels like there should be a better way to do this.
+		// On a second thought, rather than always copying to the beginning,
+		// if copying to the position of the earliest invalid index, it
+		// should be possible to get a solution in a single pass.
+		// Ran out of time to implement this.
 		for !ok {
 			// Take element at invalid index and move it to the beginning
 			// of the slice.

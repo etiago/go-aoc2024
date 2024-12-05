@@ -3,6 +3,7 @@ package goaoc2024lib
 import (
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -18,4 +19,58 @@ func ReadFile(input_file_path *string) string {
 func ReadFileLines(input_file_path *string) []string {
 	content := ReadFile(input_file_path)
 	return strings.Split(content, "\n")
+}
+
+func LoadDay5Rules(input_file_path *string) map[int]map[int]struct{} {
+	content := ReadFileLines(input_file_path)
+
+	rules := make(map[int]map[int]struct{})
+	for _, line := range content {
+		if line == "" {
+			break
+		}
+
+		parts := strings.Split(line, "|")
+
+		left, _ := strconv.Atoi(parts[0])
+		right, _ := strconv.Atoi(parts[1])
+
+		if _, ok := rules[left]; !ok {
+			rules[left] = make(map[int]struct{})
+			rules[left][right] = struct{}{}
+		} else {
+			rules[left][right] = struct{}{}
+		}
+	}
+
+	return rules
+}
+
+func LoadDay5Updates(input_file_path *string) [][]int {
+	content := ReadFileLines(input_file_path)
+
+	skipRules := true
+	updates := make([][]int, 0)
+
+	for _, line := range content {
+		if line != "" && skipRules {
+			continue
+		}
+
+		if line == "" {
+			skipRules = false
+			continue
+		}
+
+		parts := strings.Split(line, ",")
+		update := make([]int, 0)
+		for part := range parts {
+			num, _ := strconv.Atoi(parts[part])
+			update = append(update, num)
+		}
+
+		updates = append(updates, update)
+	}
+
+	return updates
 }

@@ -74,3 +74,31 @@ func LoadDay5Updates(input_file_path *string) [][]int {
 
 	return updates
 }
+
+type GuardPosition struct {
+	x int
+	y int
+}
+
+type GuardPositionWithOrientation struct {
+	guardPosition GuardPosition
+	orientation   Orientation
+}
+
+func LoadDay6Map(inputFilePath *string) ([][]rune, *GuardPosition) {
+	content := ReadFileLines(inputFilePath)
+
+	mapArray := make([][]rune, len(content))
+	var guardPosition *GuardPosition = nil
+
+	for i, line := range content {
+		mapArray[i] = []rune(line)
+
+		maybeGuardX := strings.Index(line, "^")
+		if maybeGuardX != -1 {
+			guardPosition = &GuardPosition{maybeGuardX, i}
+		}
+	}
+
+	return mapArray, guardPosition
+}

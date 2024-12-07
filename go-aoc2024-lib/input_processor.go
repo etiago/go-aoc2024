@@ -102,3 +102,28 @@ func LoadDay6Map(inputFilePath *string) ([][]rune, *GuardPosition) {
 
 	return mapArray, guardPosition
 }
+
+type Equation struct {
+	result   int64
+	operands []int64
+}
+
+func LoadDay7Equations(inputFilePath *string) []Equation {
+	content := ReadFileLines(inputFilePath)
+
+	equations := make([]Equation, len(content))
+	for i, line := range content {
+		chunks := strings.Split(line, ": ")
+		result, _ := strconv.ParseInt(chunks[0], 10, 64)
+
+		operands := strings.Split(chunks[1], " ")
+		operandsInt := make([]int64, len(operands))
+		for i, operand := range operands {
+			operandsInt[i], _ = strconv.ParseInt(operand, 10, 64)
+		}
+
+		equation := Equation{result, operandsInt}
+		equations[i] = equation
+	}
+	return equations
+}

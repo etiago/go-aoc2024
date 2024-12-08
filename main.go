@@ -26,6 +26,8 @@ func main() {
 		goaoc2024lib.Day6(input_file_path)
 	case 7:
 		goaoc2024lib.Day7(input_file_path)
+	case 8:
+		goaoc2024lib.Day8(input_file_path)
 	default:
 		log.Fatalf("Day %d not implemented", *day)
 	}

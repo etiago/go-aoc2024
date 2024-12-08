@@ -127,3 +127,65 @@ func LoadDay7Equations(inputFilePath *string) []Equation {
 	}
 	return equations
 }
+
+type Point struct {
+	x int
+	y int
+}
+type AntennaMapWithMetadata struct {
+	mapArray           [][]rune
+	antennaToLocations map[rune][]Point
+}
+type AtennaMapWithAntinodeSet struct {
+	mapArray    [][]rune
+	antinodeSet map[Point]struct{}
+}
+
+func (antennaMapWithMetadata AntennaMapWithMetadata) String() string {
+	var sb strings.Builder
+	sb.WriteString("-------\n")
+	for _, line := range antennaMapWithMetadata.mapArray {
+		sb.WriteString(string(line))
+		sb.WriteString("\n")
+	}
+	sb.WriteString("-------\n")
+	return sb.String()
+}
+
+func (antennaMapWithAntinodeSet AtennaMapWithAntinodeSet) String() string {
+	var sb strings.Builder
+	sb.WriteString("-------\n")
+	for y, line := range antennaMapWithAntinodeSet.mapArray {
+		for x, char := range line {
+			if _, ok := antennaMapWithAntinodeSet.antinodeSet[Point{x, y}]; ok && char == '.' {
+				sb.WriteString("#")
+			} else {
+				sb.WriteString(string(char))
+			}
+		}
+		sb.WriteString("\n")
+	}
+	sb.WriteString("-------\n")
+	return sb.String()
+}
+
+func LoadDay8Map(inputFilePath *string) AntennaMapWithMetadata {
+	content := ReadFileLines(inputFilePath)
+	antennaToLocations := make(map[rune][]Point)
+
+	mapArray := make([][]rune, len(content))
+	for i, line := range content {
+		mapArray[i] = []rune(line)
+
+		for j, char := range line {
+			if char != '.' {
+				if _, ok := antennaToLocations[char]; !ok {
+					antennaToLocations[char] = make([]Point, 0)
+				}
+				antennaToLocations[char] = append(antennaToLocations[char], Point{j, i})
+			}
+		}
+	}
+
+	return AntennaMapWithMetadata{mapArray, antennaToLocations}
+}

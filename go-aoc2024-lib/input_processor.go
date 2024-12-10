@@ -189,3 +189,104 @@ func LoadDay8Map(inputFilePath *string) AntennaMapWithMetadata {
 
 	return AntennaMapWithMetadata{mapArray, antennaToLocations}
 }
+
+type Block struct {
+	id      int
+	indices []int
+}
+
+type Disk struct {
+	dataBlocks []Block
+	freeBlock  Block
+	length     int
+}
+
+func (disk Disk) String() string {
+	retVal := make([]rune, disk.length)
+
+	for _, block := range disk.dataBlocks {
+		for _, index := range block.indices {
+			retVal[index] = '0' + rune(block.id)
+		}
+
+		for _, index := range disk.freeBlock.indices {
+			retVal[index] = '.'
+		}
+	}
+
+	return string(retVal)
+}
+
+func LoadDay9Disk(inputFilePath *string) Disk {
+	content := ReadFile(inputFilePath)
+
+	dataBlocks := make([]Block, 0)
+	freeBlock := Block{-1, make([]int, 0)}
+	index := 0
+	dataBlockIndex := 0
+	for i := 0; i < len(content); i++ {
+		dataChar := content[i]
+		intChar, _ := strconv.Atoi(string(dataChar))
+		block := Block{dataBlockIndex, make([]int, 0)}
+
+		for j := index; j < index+intChar; j++ {
+			block.indices = append(block.indices, j)
+		}
+
+		dataBlocks = append(dataBlocks, block)
+		dataBlockIndex++
+
+		index += intChar
+
+		i++
+
+		if i >= len(content) {
+			break
+		}
+
+		spaceChar := content[i]
+		intSpaceChar, _ := strconv.Atoi(string(spaceChar))
+
+		for j := index; j < index+intSpaceChar; j++ {
+			freeBlock.indices = append(freeBlock.indices, j)
+		}
+
+		index += intSpaceChar
+	}
+
+	log.Println("Data blocks:", dataBlocks)
+
+	return Disk{dataBlocks, freeBlock, index + 1}
+}
+
+const ImpassableTile = -2
+
+type Day10Map [][]int
+
+type Day10MapWithMetadata struct {
+	mapArray    Day10Map
+	startPoints []Point
+}
+
+func LoadDay10Map(inputFilePath *string) Day10MapWithMetadata {
+	content := ReadFileLines(inputFilePath)
+
+	mapArray := make(Day10Map, len(content))
+	startPoints := make([]Point, 0)
+	for i, line := range content {
+		mapArray[i] = make([]int, len(line))
+		for j, char := range line {
+			num, err := strconv.Atoi(string(char))
+			if err != nil {
+				mapArray[i][j] = ImpassableTile
+				continue
+			}
+			if num == 0 {
+				startPoints = append(startPoints, Point{j, i})
+			}
+			mapArray[i][j] = num
+		}
+	}
+
+	return Day10MapWithMetadata{mapArray, startPoints}
+}

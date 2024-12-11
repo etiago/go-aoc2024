@@ -290,3 +290,18 @@ func LoadDay10Map(inputFilePath *string) Day10MapWithMetadata {
 
 	return Day10MapWithMetadata{mapArray, startPoints}
 }
+
+type Stone uint64
+
+func LoadDay11Stones(inputFilePath *string) []Stone {
+	content := ReadFile(inputFilePath)
+
+	stoneStrs := strings.Split(content, " ")
+
+	stones := make([]Stone, len(stoneStrs))
+	for i, stoneStr := range stoneStrs {
+		stone, _ := strconv.ParseUint(stoneStr, 10, 64)
+		stones[i] = Stone(stone)
+	}
+	return stones
+}

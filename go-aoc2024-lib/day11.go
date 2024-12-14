@@ -106,12 +106,14 @@ func day11Part2(inputFilePath *string) int {
 		stoneCounts[stone]++
 	}
 
-	newStoneCounts := iterateStoneCounts(stoneCounts, 74)
+	newStoneCounts := iterateStoneCounts(stoneCounts, 10)
 	sum := uint64(0)
 	for _, count := range newStoneCounts {
 		sum += count
 	}
+
 	log.Println("Stone counts:", sum)
+	log.Println("Stone counts:", newStoneCounts)
 	return 0
 }
 

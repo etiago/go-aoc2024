@@ -3,6 +3,7 @@ package goaoc2024lib
 import (
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -19,6 +20,15 @@ func ReadFile(input_file_path *string) string {
 func ReadFileLines(input_file_path *string) []string {
 	content := ReadFile(input_file_path)
 	return strings.Split(content, "\n")
+}
+
+func ReadFileLinesAsRuneMatrix(input_file_path *string) [][]rune {
+	lines := ReadFileLines(input_file_path)
+	matrix := make([][]rune, len(lines))
+	for i, line := range lines {
+		matrix[i] = []rune(line)
+	}
+	return matrix
 }
 
 func LoadDay5Rules(input_file_path *string) map[int]map[int]struct{} {
@@ -131,6 +141,10 @@ func LoadDay7Equations(inputFilePath *string) []Equation {
 type Point struct {
 	x int
 	y int
+}
+type PointUint struct {
+	x uint64
+	y uint64
 }
 type AntennaMapWithMetadata struct {
 	mapArray           [][]rune
@@ -304,4 +318,66 @@ func LoadDay11Stones(inputFilePath *string) []Stone {
 		stones[i] = Stone(stone)
 	}
 	return stones
+}
+
+type Day13Game struct {
+	buttonAStep Point
+	buttonBStep Point
+	prize       Point
+}
+
+func LoadDay13Games(inputFilePath *string, addCorrection bool) []Day13Game {
+	content := ReadFileLines(inputFilePath)
+	buttonRegexp := regexp.MustCompile(`Button (A|B){1}: X\+(?P<x>[0-9]+), Y\+(?P<y>[0-9]+)`)
+	prizeRegexp := regexp.MustCompile("Prize: X=(?P<x>[0-9]+), Y=(?P<y>[0-9]+)")
+
+	correction := 10000000000000
+	games := make([]Day13Game, 0)
+	for i := 0; i < len(content)-2; i += 4 {
+		matchesA := buttonRegexp.FindAllStringSubmatch(content[i], -1)
+		buttonAX, _ := strconv.Atoi(matchesA[0][2])
+		buttonAY, _ := strconv.Atoi(matchesA[0][3])
+
+		matchesB := buttonRegexp.FindAllStringSubmatch(content[i+1], -1)
+		buttonBX, _ := strconv.Atoi(matchesB[0][2])
+		buttonBY, _ := strconv.Atoi(matchesB[0][3])
+
+		matchesPrize := prizeRegexp.FindAllStringSubmatch(content[i+2], -1)
+		prizeX, _ := strconv.Atoi(matchesPrize[0][1])
+		prizeY, _ := strconv.Atoi(matchesPrize[0][2])
+
+		if !addCorrection {
+			game := Day13Game{Point{buttonAX, buttonAY}, Point{buttonBX, buttonBY}, Point{prizeX, prizeY}}
+			games = append(games, game)
+		} else {
+			game := Day13Game{Point{buttonAX, buttonAY}, Point{buttonBX, buttonBY}, Point{prizeX + correction, prizeY + correction}}
+			games = append(games, game)
+		}
+	}
+	return games
+}
+
+type Robot struct {
+	position Point
+	velocity Point
+}
+
+func LoadDay14Robots(inputFilePath *string) []Robot {
+	content := ReadFileLines(inputFilePath)
+
+	r := regexp.MustCompile(`p=(?P<posX>[0-9]+),(?P<posY>[0-9]+) v=(?P<velX>[-]{0,1}[0-9]+),(?P<velY>[-]{0,1}[0-9]+)`)
+
+	robots := make([]Robot, 0)
+	for i := 0; i < len(content); i++ {
+		matchesA := r.FindAllStringSubmatch(content[i], -1)
+		posX, _ := strconv.Atoi(matchesA[0][1])
+		posY, _ := strconv.Atoi(matchesA[0][2])
+
+		velX, _ := strconv.Atoi(matchesA[0][3])
+		velY, _ := strconv.Atoi(matchesA[0][4])
+
+		robot := Robot{Point{posX, posY}, Point{velX, velY}}
+		robots = append(robots, robot)
+	}
+	return robots
 }

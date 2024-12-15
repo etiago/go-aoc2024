@@ -381,3 +381,71 @@ func LoadDay14Robots(inputFilePath *string) []Robot {
 	}
 	return robots
 }
+
+type Movement int
+
+const (
+	Up Movement = iota
+	Right
+	Down
+	Left
+)
+
+type Day15Map struct {
+	mapArray      [][]rune
+	movements     []Movement
+	robotPosition Point
+}
+
+func LoadDay15Map(inputFilePath *string, part2Padding bool) Day15Map {
+	content := ReadFileLines(inputFilePath)
+
+	mapArray := make([][]rune, len(content))
+	movements := make([]Movement, 0)
+	mapFinished := false
+	robotPosition := Point{0, 0}
+	for i, line := range content {
+		if !mapFinished && line == "" {
+			mapFinished = true
+			continue
+		}
+		if !mapFinished {
+			newLine := make([]rune, 0)
+			for j, char := range line {
+				if part2Padding {
+					if char == '#' {
+						newLine = append(newLine, []rune{'#', '#'}...)
+					} else if char == '.' {
+						newLine = append(newLine, []rune{'.', '.'}...)
+					} else if char == '@' {
+						robotPosition = Point{len(newLine), i}
+						newLine = append(newLine, []rune{'@', '.'}...)
+					} else if char == 'O' {
+						newLine = append(newLine, []rune{'[', ']'}...)
+					}
+				} else {
+					newLine = append(newLine, char)
+					if char == '@' {
+						robotPosition = Point{j, i}
+					}
+				}
+			}
+			mapArray[i] = newLine
+			continue
+		}
+		for _, char := range line {
+			switch char {
+			case '^':
+				movements = append(movements, Up)
+			case '>':
+				movements = append(movements, Right)
+			case 'v':
+				movements = append(movements, Down)
+			case '<':
+				movements = append(movements, Left)
+			}
+		}
+	}
+
+	return Day15Map{mapArray, movements, robotPosition}
+}
